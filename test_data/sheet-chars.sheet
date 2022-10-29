@@ -1,0 +1,13 @@
+-- Lines starting with '--' are comments
+
+@foo
+   -- comments can be placed here too
+   .name Foo
+   .age  99
+
+@baz
+   .name  Baz
+   .field Bazzly
+
+@bar
+   .name Bar Bar

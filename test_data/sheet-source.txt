@@ -1,0 +1,26 @@
+      @bar
+   Lorem ipsum dolor sit amet, consectetur
+   adipisicing elit, sed do eiusmod
+
+Lorem ipsum dolor sit amet, consectetur
+adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+
+      @foo
+   Consectetur adipisicing elit, sed do
+   eiusmod.
+
+Ipsum dolor, amet @foo.age, consectetur
+adipisicing elit, sed do eiusmod. consequat.
+Duis aute irure, @baz, in reprehenderit in
+voluptate velit esse cillum dolore eu fugiat
+nulla pariatur. Excepteur sint occaecat
+cupidatat non proident, sunt in culpa qui
+officia deserunt mollit anim id est laborum.
+
+      @does-not-exist
+   Ipsum dolor consectetur...
+
+Reprehenderit in voluptate velit esse cillum
+dolore eu fugiat nulla pariatur, excepteur sint
+occaecat cupidatat non proident.
