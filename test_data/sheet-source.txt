@@ -1,3 +1,6 @@
+To see the converted output:
+   j-sheet sheet-source.txt sheet-chars.sheet
+
       @bar
    Lorem ipsum dolor sit amet, consectetur
    adipisicing elit, sed do eiusmod

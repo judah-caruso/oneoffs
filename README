@@ -7,6 +7,15 @@
    - sheet.jai, annotation replacement tool
 
 
+.. Installation
+   Everything can be compiled using:
+
+      jai name-of-program.jai
+
+   This will create a 'bin/' folder and the
+   output executable within said folder.
+
+
 .. License - Unlicense (Public Domain)
    All oneoffs are public domain, see LICENSE
    for full notice.

@@ -1,7 +1,7 @@
 -- Lines starting with '--' are comments
 
 @foo
-   -- comments can be placed here too
+   -- Comments can be placed here, too
    .name Foo
    .age  99
 
