@@ -275,4 +275,4 @@ Character_Values :: Table(string, string);
 #import "Basic";
 #import "String";
 #import "Hash_Table";
-#import,file "../base/module.jai";
+#import,file "./base/module.jai";

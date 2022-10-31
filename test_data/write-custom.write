@@ -1,0 +1,22 @@
+#let foo Hello, I am a variable.
+
+#def published
+   <span>(/date)\s\(at (/time)\)</span>
+#end
+
+#def begin $title
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>$title</title>
+</head>
+<body>
+#foo
+#end
+
+#def end
+</body>
+</html>
+#end
