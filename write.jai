@@ -1,13 +1,85 @@
 /*
     Write is a small writing/markup tool that
     allows you to change how text is
-    transformed.
+    transformed. It was made to replace
+    HTMl/markdown in my day-to-day.
+
+    Write's syntax is inspired by Lisp. However,
+    unlike Lisp, text is the main primitive and
+    can be placed anywhere. Only special
+    sequences are considered markup.
+
+    For example, to embolden a piece of text:
+        (bold Hello, this is a test.)
+    transforms into:
+        <strong>Hello, this is a test.</strong>
+
+    The character '(' signals the start of an
+    expression. To write a literal '(', escape
+    it or use the '/' definition.
+        This \(could be\) a (/ decent) test.
+    transforms into:
+        This (could be) a (decent) test.
+
+    Note: any special character can be output
+    literally if a '\' is placed before it.
+        \( -> (
+        \# -> #
+        and so on...
+
+    Because Write attempts to be as agnostic
+    as possible, the above definitions are not
+    defined by default. A 'use' directive must
+    be placed at the top of the file:
+        #use html
+        #use markdown
+        #use my_defs
+
+    These definitions are builtin and cannot be
+    edited (unless you modify the source and
+    recompile). However, they can be overridden
+    like so:
+        #def bold $value
+            <b>$value</b> #! Now using 'b' instead of 'strong'
+        #end
+
+    The above syntax isn't just for overriding
+    builtin definitions, but defining new ones
+    as well. For example, we may want to define
+    a way to write urls:
+        #define site $url $text
+            <a href="http://$url">$text</a>
+        #end
+
+    It can now be used like so:
+        (site judahcaruso.com | This is my website!)
+
+    Aside from definitions, variables can also
+    be defined. Variables are values that can
+    be changed over time (definitions can also
+    be overridden, however, variables are
+    intended to be).
+
+    The following file:
+        #use markdown
+
+        #let a-variable Hello, I am a (bold variable).
+        #a-variable
+        #set a-variable Now my value is 10
+        #a-variable
+    will produce:
+        Hello, I am a **variable**.
+        Now my value is 10
+
+    Write always prints the final text to
+    standard out.
 */
 
 // @Todo:
 // - Handle recursive defines (needs to error when found)
 // - Handle recursive variables (shouldn't break/error)
 // - Add builtin (+ - * /) so we can do math with variables
+// - A very simple way to #ifdef out #use directives
 
 PROGRAM_NAME    :: "j-write";
 PROGRAM_VERSION :: "1a";
@@ -200,38 +272,6 @@ parse_def :: (using p: *Parser) -> Def, bool {
         if !p_ok break;
 
         array_add(*body, value);
-
-/*
-        if token.kind == {
-            case .Escape;
-                text := array_add(*body);
-                text.type = Text;
-                text.text = to_string(token._rune);
-                next(p);
-
-            case .Text;
-                text := array_add(*body);
-                text.type = Text;
-                text.text = token._string;
-                next(p);
-
-            case .LParen;
-                call, ok := parse_call(p);
-                if !ok return .{}, false;
-
-                value: Value;
-                value.type = Call;
-                value.call = call;
-                array_add(*body, value);
-
-            case .Comment;
-                next(p);
-
-            case;
-                error(p, "expected text or '(' but found %", token.kind);
-                return .{}, false;
-        }
-        */
     }
 
     token, ok = need(p, .End);
