@@ -145,7 +145,8 @@ valid_rune :: (r: rune) -> bool {
                       r == #char "\r" ||
                       r == #char "\t";
 
-    return !special(r) && ((r >= 0x0020 && r <= 0x007F) || (r >= 44032 && r <= 55171));
+    // @Note: Checking the valid range of unicode characters seems a bit annoying
+    return !special(r);// && ((r >= 0x0020 && r <= 0x007F) || (r >= 44032 && r <= 55171));
 }
 
 starts_number :: (r: rune) -> bool {
@@ -1091,16 +1092,16 @@ DEFAULT_MARKDOWN_DEFINES :: #string END
 #def sup       $value <sup>$value<sup> #end
 #def var       $value `$value`         #end
 
-#! #! (' hello, world) -> 'hello, world'
+#! (' hello, world) -> 'hello, world'
 #def ' $value '$value' #end
 
-#! #! (" hello, world) -> "Hello, World"
+#! (" hello, world) -> "Hello, World"
 #def " $value "$value" #end
 
-#! #! (/ Hello, World) -> (Hello, World)
+#! (/ Hello, World) -> (Hello, World)
 #def / $value &lparen;$value&rparen; #end
 
-#! #! (- this | could be | a test) -> this-could be-a test
+#! (- this | could be | a test) -> this-could be-a test
 #def - $before $middle $after
     $before&mdash;$middle&mdash;$after
 #end

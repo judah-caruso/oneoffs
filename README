@@ -5,6 +5,9 @@
 
 .. Details
    - sheet.jai, annotation replacement tool
+   - write.jai, markup tool
+   - m8.jai, bash-alternative scripting language
+   - text.jai, plaintext formatting tool
 
 
 .. Installation

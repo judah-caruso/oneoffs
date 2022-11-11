@@ -1,9 +1,14 @@
 -- Lines starting with '--' are comments
 
-@foo
-   -- Comments can be placed here, too
-   .name Foo
-   .age  99
+@foo -- Lines starting with '@' are placeholders
+   -- Lines starting with '.' are fields
+   .name    Foo
+   .age     99
+   .unicode 안녕하세요!
+
+@me
+   .name me
+   .translation! 나
 
 @baz
    .name  Baz
