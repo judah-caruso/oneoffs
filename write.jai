@@ -82,7 +82,7 @@
 // - A very simple way to #ifdef out #use directives
 
 PROGRAM_NAME    :: "j-write";
-PROGRAM_VERSION :: "1a";
+PROGRAM_VERSION :: "1a (built on November 10, 2022)";
 PROGRAM_USAGE   :: "@bold{.. usage} % @bold{<input file>}\n";
 
 #run ct_compile_to_binary(PROGRAM_NAME);
@@ -97,6 +97,20 @@ main :: () {
     if !args.count {
         color_print(PROGRAM_USAGE, PROGRAM_NAME, stderr = true);
         exit(1);
+    }
+
+    if args[0] == {
+        case "-h"; #through;
+        case "-help"; #through;
+        case "--help";
+            color_print(PROGRAM_USAGE, PROGRAM_NAME, stderr = true);
+            exit(1);
+
+        case "-v"; #through;
+        case "-version"; #through;
+        case "--version";
+            color_print("@bold{.. %} v%\n", PROGRAM_NAME, PROGRAM_VERSION, stderr = true);
+            exit(1);
     }
 
     input_file := args[0];

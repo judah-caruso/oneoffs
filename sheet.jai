@@ -44,8 +44,27 @@
 */
 
 PROGRAM_NAME    :: "j-sheet";
-PROGRAM_VERSION :: "1a";
-PROGRAM_USAGE   :: "@bold{.. usage} % @bold{<input file>} @bold{<sheet file>}\n";
+PROGRAM_VERSION :: "1c (built on November 10, 2022)";
+PROGRAM_USAGE   :: "@bold{.. usage} % @bold,red{<input file>} @bold,green{<sheet file>} [-allow-empty-fields]\n";
+
+INPUT_HELP :: #string END
+   @bold,red{input} is a file containing placeholder @ul{sequences}:
+      The @@place is @@place.age years old!
+END;
+
+SHEET_HELP :: #string END
+   @bold,green{sheet} is a file containing placeholder @ul{definitions}:
+      @@place
+         .name World
+         .age  at least 5
+END;
+
+EMPTY_HELP :: #string END
+   @bold{allow-empty-fields} allows fields to have @ul{empty} values:
+      @@Foo
+         .name
+         .other Name is empty!
+END;
 
 #run ct_compile_to_binary(PROGRAM_NAME);
 
@@ -55,6 +74,8 @@ main :: () {
 
    input_filename: string;
    sheet_filename: string;
+
+   allow_empty_fields := false;
 
    {
       args := cl_args;
@@ -71,14 +92,13 @@ main :: () {
          case "-help"; #through;
          case "--help";
             color_print(PROGRAM_USAGE, PROGRAM_NAME, stderr = true);
-            color_print("   @bold{input} a file containing placeholder @ul{sequences}\n", stderr = true);
-            color_print("   @bold{sheet} a file containing placeholder @ul{definitions}\n", stderr = true);
+            color_print("\n%\n%\n%\n", INPUT_HELP, SHEET_HELP, EMPTY_HELP, stderr = true);
             return;
 
          case "-v"; #through;
          case "-version"; #through;
          case "--version";
-            color_print("@bold{.. %} @green{v%}\n", PROGRAM_NAME, PROGRAM_VERSION, stderr = true);
+            color_print("@bold{.. %} v%\n", PROGRAM_NAME, PROGRAM_VERSION, stderr = true);
             return;
       }
 
@@ -89,15 +109,28 @@ main :: () {
 
       if !args.count {
          color_print("@red,bold{.. error} expected sheet file!\n", stderr = true);
+         exit(1);
          return;
       }
 
       sheet_filename = args[0];
+
+      if args.count > 1 {
+         if args[1] == {
+            case "-allow-empty-fields";
+               allow_empty_fields = true;
+            case;
+               color_print("@red,bold{.. error} unknown flag @yellow{'%'}\n", args[1], stderr = true);
+               exit(1);
+               return;
+         }
+      }
    }
 
    source, ok := read_entire_file(sheet_filename);
    if !ok {
       color_print("@red,bold{.. error} unable to open file: @bold{%}\n", sheet_filename, stderr = true);
+      exit(1);
       return;
    }
 
@@ -158,13 +191,15 @@ main :: () {
                value := trim(line);
 
                // invalid field
-               if !field.count || !value.count {
+               if !field.count || (!value.count && !allow_empty_fields) {
                   color_print("@red,bold{.. error} invalid line!\n   @bold{%}\n", it, stderr = true);
+                  exit(1);
                   return;
                }
 
                if !current_placeholder {
                   color_print("@red,bold{.. error} field without placeholder!\n   @bold{%}\n", it, stderr = true);
+                  exit(1);
                   return;
                }
 
@@ -181,6 +216,7 @@ main :: () {
 
             case;
                color_print("@red,bold{.. error} invalid line!\n   @bold{%}\n", it, stderr = true);
+               exit(1);
                return;
          }
       }
@@ -197,6 +233,7 @@ main :: () {
       file, ok := read_entire_file(input_filename);
       if !ok {
          color_print("@red,bold{.. error} unable to open file: @bold{%}\n", input_filename, stderr = true);
+         exit(1);
          return;
       }
 
@@ -261,7 +298,7 @@ main :: () {
 
             placeholder, ok := table_find(*placeholders, name);
             if !ok {
-               color_print("@red,bold{.. error} unknown placeholder: @bold{%}\n", name, stderr = true);
+               color_print("@red,bold{.. warning} unknown placeholder: @bold{%}\n", name, stderr = true);
                continue;
             }
 
@@ -271,6 +308,7 @@ main :: () {
                field_value, ok := table_find(placeholder, field);
                if !ok {
                   color_print("@red{.. unknown field} %.@bold{%}\n", name, field, stderr = true);
+                  exit(1);
                   return;
                }
 
